@@ -7,12 +7,6 @@ pipeline {
 
   }
   stages {
-    stage('Move Files') {
-      steps {
-        sh 'cp -r . .'
-      }
-    }
-
     stage('Build Project') {
       steps {
         sh '''
