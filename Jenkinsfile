@@ -17,21 +17,20 @@ pipeline {
     }
 
     stage('Build Image') {
-      steps {
-        sh 'docker build -t aymanazzam07/violin:1.0 .'
-      }
+       docker.withRegistry('https://registry.hub.docker.com', 'credentials-id') {
+        image = docker.build("aymanazzam07/violin:${env.BUILD_ID}")
+       }
     }
 
     stage('Push Image') {
-      steps {
-        sh 'docker push aymanazzam07/violin:1.0'
-      }
+      docker.withRegistry('https://registry.hub.docker.com', 'credentials-id') {
+        image.push()
+     }
     }
-
   }
   post {
     failure {
-      mail(to: 'aymanazzam63@gmail.com', subject: "FAILURE: ${currentBuild.fullDisplayName}", body: 'The last build of GoViolin has been failed. please check the repo code.')
+      mail to: 'aymanazzam63@gmail.com', subject: "FAILURE: ${currentBuild.fullDisplayName}", body: 'The last build of GoViolin has been failed. please check the repo code.')
     }
 
   }
